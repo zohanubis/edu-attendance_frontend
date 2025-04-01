@@ -105,7 +105,7 @@ export default function ActivityDetailPage({ params }: ActivityDetailPageProps) 
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 text-left">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/activities">
@@ -115,8 +115,8 @@ export default function ActivityDetailPage({ params }: ActivityDetailPageProps) 
           <h1 className="text-2xl font-bold">{activity.title}</h1>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid gap-6 lg:grid-cols-3 mx-auto">
+          <div className="lg:col-span-2 space-y-6 text-left">
             <Card className="overflow-hidden">
               <div className="relative h-[300px]">
                 <Image 
@@ -175,10 +175,11 @@ export default function ActivityDetailPage({ params }: ActivityDetailPageProps) 
             </Card>
 
             <Tabs defaultValue="details">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="details">Chi tiết</TabsTrigger>
                 <TabsTrigger value="schedule">Lịch trình</TabsTrigger>
                 <TabsTrigger value="gallery">Hình ảnh</TabsTrigger>
+                <TabsTrigger value="posts">Tài liệu</TabsTrigger>
               </TabsList>
               <TabsContent value="details" className="mt-4">
                 <Card>
@@ -235,8 +236,8 @@ export default function ActivityDetailPage({ params }: ActivityDetailPageProps) 
               </TabsContent>
               <TabsContent value="gallery" className="mt-4">
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Hình ảnh</CardTitle>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-center">Hình ảnh</CardTitle>
                     <CardDescription>Hình ảnh từ các hoạt động trước đây</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -265,10 +266,52 @@ export default function ActivityDetailPage({ params }: ActivityDetailPageProps) 
                   </CardContent>
                 </Card>
               </TabsContent>
+              <TabsContent value="posts" className="mt-4">
+                <Card>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-center">Tài liệu kèm theo</CardTitle>
+                    <CardDescription>Các tài liệu liên quan đến hoạt động</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {activity.id === 1 ? (
+                        <div className="space-y-4">
+                          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h3 className="font-medium">Tài liệu giới thiệu về AI và Machine Learning</h3>
+                                <p className="text-sm text-muted-foreground">Cập nhật: 10/01/2025</p>
+                              </div>
+                              <Button variant="outline" size="sm" asChild>
+                                <Link href="/posts/1">Xem</Link>
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h3 className="font-medium">Hướng dẫn thực hành Machine Learning cơ bản</h3>
+                                <p className="text-sm text-muted-foreground">Cập nhật: 12/01/2025</p>
+                              </div>
+                              <Button variant="outline" size="sm" asChild>
+                                <Link href="/posts/2">Xem</Link>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className="text-muted-foreground">Không có tài liệu nào cho hoạt động này</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
             </Tabs>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 text-left">
             <Card>
               <CardHeader>
                 <CardTitle>Đăng ký tham gia</CardTitle>

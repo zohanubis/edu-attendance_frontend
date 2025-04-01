@@ -81,7 +81,7 @@ export default function StudentHistoryPage() {
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 px-5 mx-auto">
         <h1 className="text-3xl font-bold">Lịch sử điểm danh</h1>
         
         <div className="grid gap-4 md:grid-cols-3">

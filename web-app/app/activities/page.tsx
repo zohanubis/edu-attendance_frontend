@@ -107,7 +107,7 @@ export default function ActivitiesPage() {
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 text-left">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <h1 className="text-3xl font-bold">Hoạt động</h1>
         </div>

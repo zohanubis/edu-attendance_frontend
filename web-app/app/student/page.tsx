@@ -84,8 +84,8 @@ export default function StudentHomePage() {
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="space-y-6 px-5 mx-auto text-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
           <div>
             <h1 className="text-3xl font-bold">Xin chào, Sinh viên</h1>
             <p className="text-muted-foreground">Chào mừng bạn đến với hệ thống quản lý điểm danh</p>

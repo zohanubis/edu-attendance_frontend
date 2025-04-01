@@ -40,7 +40,7 @@ export default function StudentProfilePage() {
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 px-5 mx-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Thông tin cá nhân</h1>
           <Button onClick={handleEdit} variant={isEditing ? "destructive" : "default"}>

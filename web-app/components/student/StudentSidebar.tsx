@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Home, Calendar, FileText, ClipboardList, User } from 'lucide-react';
+import { Home, Calendar, FileText, ClipboardList, User, BookOpen } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
@@ -32,9 +32,9 @@ export function StudentSidebar({ userRole = 'student' }: StudentSidebarProps) {
       icon: <Calendar className="h-5 w-5" />
     },
     {
-      title: 'Bài viết',
+      title: 'Tài liệu',
       href: '/posts',
-      icon: <FileText className="h-5 w-5" />
+      icon: <BookOpen className="h-5 w-5" />
     },
     {
       title: 'Lịch sử điểm danh',
@@ -62,7 +62,7 @@ export function StudentSidebar({ userRole = 'student' }: StudentSidebarProps) {
     : commonItems;
 
   const sidebar = (
-    <div className="w-64 border-r h-screen bg-background">
+    <div className="border-r h-full bg-background overflow-hidden">
       <ScrollArea className="h-full">
         <div className="p-4">
           <div className="mb-4 px-4 py-2">

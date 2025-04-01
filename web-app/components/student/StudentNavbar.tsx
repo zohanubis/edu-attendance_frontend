@@ -17,7 +17,7 @@ export function StudentNavbar() {
   const { toggle, isOpen } = useSidebarStore();
   
   return (
-    <div className="flex items-center justify-between p-4 border-b">
+    <div className="flex items-center justify-between p-4 border-b w-full sticky top-0 z-10 bg-background">
       <div className="flex items-center">
         <Button 
           variant="ghost" 
@@ -28,12 +28,12 @@ export function StudentNavbar() {
         >
           <Menu className="h-5 w-5" />
         </Button>
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center w-full">
           <Image 
-            src="https://ts.huit.edu.vn/Images/logo-huit-ts-mau-trang-co-ma-truong.svg" 
+            src="https://huit.edu.vn/Images/Documents/N00CT/logo-huit-web-chinh-moi-mau-xanh-02.svg" 
             alt="HUIT Logo" 
-            width={120} 
-            height={40} 
+            width={200} 
+            height={500} 
             className="dark:invert"
           />
         </Link>
