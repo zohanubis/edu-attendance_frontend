@@ -15,13 +15,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
               <Image 
-                src="/logo.png" 
+                src="https://huit.edu.vn/Images/Documents/N00CT/logo-huit-web-chinh-moi-mau-xanh-02.svg" 
                 alt="EDU Attendance" 
-                width={32} 
-                height={32}
+                width={200} 
+                height={500}
                 className="rounded-sm"
               />
-              <span className="font-bold">EDU Attendance</span>
             </Link>
             <ModeToggle />
           </div>

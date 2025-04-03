@@ -1,1 +1,1 @@
-export * from './UnionWorkerLayout'; 
+export * from './UnionWorkerLayout';

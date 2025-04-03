@@ -4,62 +4,47 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Home, Calendar, FileText, ClipboardList, User, BookOpen } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useSidebarStore } from '@/store/sidebar-store';
+import { studentItems, unionWorkerItems, adminItems } from '@/config/sidebar-items';
 
-interface StudentSidebarProps {
-  userRole?: 'student' | 'union_worker';
+interface SidebarProps {
+  userRole: 'admin' | 'student' | 'union_worker';
 }
 
-export function StudentSidebar({ userRole = 'student' }: StudentSidebarProps) {
+export function Sidebar({ userRole }: SidebarProps) {
   const pathname = usePathname();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { isOpen } = useSidebarStore();
-  
-  const commonItems = [
-    {
-      title: 'Trang chủ',
-      href: '/',
-      icon: <Home className="h-5 w-5" />
-    },
-    {
-      title: 'Hoạt động',
-      href: '/activities',
-      icon: <Calendar className="h-5 w-5" />
-    },
-    {
-      title: 'Tài liệu',
-      href: '/posts',
-      icon: <BookOpen className="h-5 w-5" />
-    },
-    {
-      title: 'Lịch sử điểm danh',
-      href: '/student/history',
-      icon: <ClipboardList className="h-5 w-5" />
-    },
-    {
-      title: 'Thông tin cá nhân',
-      href: '/student/profile',
-      icon: <User className="h-5 w-5" />
-    }
-  ];
 
-  const unionWorkerItems = [
-    {
-      title: 'Điểm danh',
-      href: '/union_worker/attendance',
-      icon: <ClipboardList className="h-5 w-5" />
+  // Get sidebar items based on user role
+  const getSidebarItems = () => {
+    switch (userRole) {
+      case 'admin':
+        return adminItems;
+      case 'union_worker':
+        return unionWorkerItems;
+      case 'student':
+      default:
+        return studentItems;
     }
-  ];
+  };
 
-  // Determine which items to show based on user role
-  const sidebarItems = userRole === 'union_worker' 
-    ? [...commonItems, ...unionWorkerItems]
-    : commonItems;
+  const sidebarItems = getSidebarItems();
+
+  const getRoleTitle = () => {
+    switch (userRole) {
+      case 'admin':
+        return 'Quản trị viên';
+      case 'union_worker':
+        return 'Cộng tác đoàn';
+      case 'student':
+      default:
+        return 'Sinh viên';
+    }
+  };
 
   const sidebar = (
     <div className="border-r h-full bg-background overflow-hidden">
@@ -67,9 +52,7 @@ export function StudentSidebar({ userRole = 'student' }: StudentSidebarProps) {
         <div className="p-4">
           <div className="mb-4 px-4 py-2">
             <h2 className="text-lg font-semibold">EDU Attendance</h2>
-            <p className="text-sm text-muted-foreground">
-              {userRole === 'union_worker' ? 'Cộng tác đoàn' : 'Sinh viên'}
-            </p>
+            <p className="text-sm text-muted-foreground">{getRoleTitle()}</p>
           </div>
           <nav className="space-y-1">
             {sidebarItems.map((item) => (

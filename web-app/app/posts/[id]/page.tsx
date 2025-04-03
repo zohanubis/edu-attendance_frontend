@@ -19,7 +19,116 @@ interface PostDetailPageProps {
 export default function PostDetailPage({ params }: PostDetailPageProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [postData, setPostData] = useState<any>(null);
-  
+
+  useEffect(() => {
+    // Tìm bài viết dựa vào id từ params
+    const post = posts.find(p => p.id === parseInt(params.id));
+    setPostData(post);
+  }, [params.id]);
+
+  if (!postData) {
+    return (
+      <StudentLayout>
+        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+          <p className="text-muted-foreground">Không tìm thấy bài viết</p>
+        </div>
+      </StudentLayout>
+    );
+  }
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+    toast.success(isBookmarked ? 'Đã bỏ lưu bài viết' : 'Đã lưu bài viết');
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: postData.title,
+        text: postData.description,
+        url: window.location.href
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Fallback khi không hỗ trợ Web Share API
+      toast.error('Không thể chia sẻ bài viết');
+    }
+  };
+
+  return (
+    <StudentLayout>
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/posts">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <h1 className="text-2xl font-bold">{postData.title}</h1>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {postData.tags.map((tag, index) => (
+                <Badge key={index} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+            <CardDescription className="space-y-2">
+              <div className="flex items-center text-sm text-muted-foreground">
+                <Calendar className="mr-2 h-4 w-4" />
+                {postData.date}
+              </div>
+              <div className="flex items-center text-sm text-muted-foreground">
+                <FileText className="mr-2 h-4 w-4" />
+                Hoạt động: {postData.activityTitle}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Tác giả: {postData.author}
+              </div>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div 
+              className="prose prose-sm max-w-none dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: postData.content }}
+            />
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleBookmark}
+                className={isBookmarked ? 'text-primary' : ''}
+              >
+                <Bookmark className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleShare}
+              >
+                <Share2 className="h-4 w-4" />
+              </Button>
+            </div>
+            {postData.fileUrl && (
+              <Button asChild>
+                <Link href={postData.fileUrl} target="_blank">
+                  <Download className="mr-2 h-4 w-4" />
+                  Tải tài liệu
+                </Link>
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
+      </div>
+    </StudentLayout>
+  );
+}
+
   // Mock data for posts
   const posts = [
     {
@@ -258,7 +367,7 @@ print(f'Độ chính xác trên tập kiểm tra: {test_acc:.2f}')</code></pre>
         <p>Mặc dù có nhiều ưu điểm, blockchain vẫn phải đối mặt với một số thách thức:</p>
         <ul>
           <li><strong>Khả năng mở rộng:</strong> Một số blockchain có thể xử lý số lượng giao dịch hạn chế.</li>
-          <li><strong>Tiêu thụ năng lượng:</strong> Một số cơ chế đồng thuận (như Proof of Work) tiêu thụ nhiều năng lượng.</li>
+          <li><strong>Tiêu thụ năng lượng:</strong> Một số cơ chế Đồng thuận (như Proof of Work) tiêu thụ nhiều năng lượng.</li>
           <li><strong>Quy định pháp lý:</strong> Thiếu khung pháp lý rõ ràng cho các ứng dụng blockchain.</li>
           <li><strong>Tích hợp:</strong> Khó khăn trong việc tích hợp với các hệ thống hiện có.</li>
         </ul>
@@ -272,5 +381,9 @@ print(f'Độ chính xác trên tập kiểm tra: {test_acc:.2f}')</code></pre>
           <li>Sự tích hợp của blockchain với các công nghệ khác như AI và IoT.</li>
         </ul>
         
-        <p>Blockchain là một công nghệ đầy hứa hẹn với tiềm năng thay đổi cách chúng ta lưu trữ và trao đổi giá trị. Tuy nhiên, để đạt được tiềm năng đầy đủ của nó, chúng ta cần giải quyết các thách thức hiện tại và phát triển các ứng dụng
+        <p>Blockchain là một công nghệ đầy hứa hẹn với tiềm năng thay đổi cách chúng ta lưu trữ và trao đổi giá trị. Tuy nhiên, để đạt được tiềm năng đầy đủ của nó, chúng ta cần giải quyết các thách thức hiện tại và phát triển các ứng dụng</p>
+      `,
+      fileUrl: '/files/blockchain-introduction.pdf'
+    }
+  ];
 

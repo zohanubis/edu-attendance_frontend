@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Home, CalendarDays, FileText, BookOpen, Settings, Users, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type NavItem = {
   label: string;
   href: string;
   icon?: React.ReactNode;
+  roles?: Array<'student' | 'union_worker' | 'admin' | 'public'>;
 };
 
 interface NavigationProps {
@@ -17,44 +18,35 @@ interface NavigationProps {
 export function Navigation({ userRole }: NavigationProps) {
   const pathname = usePathname();
 
-  // Navigation items for different roles
-  const publicNavItems: NavItem[] = [
-    { label: 'Activities', href: '/activities' },
-    { label: 'Posts', href: '/posts' },
+  // Tất cả các navigation items với thông tin về vai trò được phép truy cập
+  const allNavItems: NavItem[] = [  
+    // Public và tất cả các vai trò khác đều có thể truy cập
+    { label: 'Trang chủ', href: '/', icon: <Home className="mr-2 h-4 w-4" />, roles: ['public', 'student', 'union_worker', 'admin'] },
+    { label: 'Hoạt động', href: '/activities', icon: <CalendarDays className="mr-2 h-4 w-4" />, roles: ['public', 'student', 'union_worker', 'admin'] },
+    { label: 'Bài viết', href: '/posts', icon: <FileText className="mr-2 h-4 w-4" />, roles: ['public', 'student', 'union_worker', 'admin'] },
+    
+    // Chỉ student mới có thể truy cập
+    { label: 'Lịch sử', href: '/student/history', icon: <CalendarDays className="mr-2 h-4 w-4" />, roles: ['student'] },
+    { label: 'Hồ sơ', href: '/student/profile', icon: <User className="mr-2 h-4 w-4" />, roles: ['student'] },
+    
+    // Chỉ union_worker mới có thể truy cập
+    { label: 'Điểm danh', href: '/union_worker/attendance', icon: <BookOpen className="mr-2 h-4 w-4" />, roles: ['union_worker'] },
+    { label: 'Lịch sử', href: '/union_worker/history', icon: <CalendarDays className="mr-2 h-4 w-4" />, roles: ['union_worker'] },
+    
+    // Chỉ admin mới có thể truy cập
+    { label: 'Dashboard', href: '/admin/dashboard', icon: <LayoutDashboard className="mr-2 h-4 w-4" />, roles: ['admin'] },
+    { label: 'Quản lý hoạt động', href: '/admin/activities', icon: <CalendarDays className="mr-2 h-4 w-4" />, roles: ['admin'] },
+    { label: 'Quản lý bài viết', href: '/admin/posts', icon: <FileText className="mr-2 h-4 w-4" />, roles: ['admin'] },
+    { label: 'Quản lý cán bộ', href: '/admin/union_workers', icon: <Users className="mr-2 h-4 w-4" />, roles: ['admin'] },
+    { label: 'Quản lý sinh viên', href: '/admin/students', icon: <Users className="mr-2 h-4 w-4" />, roles: ['admin'] },
+    { label: 'Cài đặt', href: '/admin/settings', icon: <Settings className="mr-2 h-4 w-4" />, roles: ['admin'] },
   ];
 
-  const studentNavItems: NavItem[] = [
-    ...publicNavItems,
-    { label: 'Attendance', href: '/student/attendance' },
-    { label: 'History', href: '/student/history' },
-    { label: 'Profile', href: '/student/profile', icon: <User className="mr-2 h-4 w-4" /> },
-  ];
-
-  const unionWorkerNavItems: NavItem[] = [
-    ...publicNavItems,
-    { label: 'Attendance', href: '/union_worker/attendance' },
-    { label: 'History', href: '/union_worker/history' },
-    { label: 'Profile', href: '/union_worker/profile', icon: <User className="mr-2 h-4 w-4" /> },
-  ];
-
-  const adminNavItems: NavItem[] = [
-    { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Activities', href: '/admin/activities' },
-    { label: 'Posts', href: '/admin/posts' },
-    { label: 'Union Workers', href: '/admin/union_workers' },
-    { label: 'Students', href: '/admin/students' },
-    { label: 'Settings', href: '/admin/settings' },
-  ];
-
-  // Determine which nav items to use based on user role
-  let navItems: NavItem[] = publicNavItems;
-  if (userRole === 'student') {
-    navItems = studentNavItems;
-  } else if (userRole === 'union_worker') {
-    navItems = unionWorkerNavItems;
-  } else if (userRole === 'admin') {
-    navItems = adminNavItems;
-  }
+  // Lọc các mục navigation dựa trên vai trò người dùng
+  const currentRole = userRole || 'public';
+  const navItems = allNavItems.filter(item => 
+    item.roles?.includes(currentRole as 'public' | 'student' | 'union_worker' | 'admin')
+  );
 
   return (
     <nav className="flex items-center space-x-4 lg:space-x-6">
@@ -74,20 +66,20 @@ export function Navigation({ userRole }: NavigationProps) {
         </Link>
       ))}
       
-      {userRole && (
-        <Button variant="ghost" size="sm" className="ml-auto" asChild>
-          <Link href="/auth/logout">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Link>
-        </Button>
-      )}
-
-      {!userRole && (
-        <Button variant="outline" size="sm" className="ml-auto" asChild>
-          <Link href="/auth/login">Login</Link>
-        </Button>
-      )}
+      <div className="ml-auto">
+        {userRole ? (
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/auth/logout">
+              <LogOut className="mr-2 h-4 w-4" />
+              Đăng xuất
+            </Link>
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/auth/login">Đăng nhập</Link>
+          </Button>
+        )}
+      </div>
     </nav>
   );
-} 
+}

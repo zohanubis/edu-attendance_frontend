@@ -1,3 +1,6 @@
+"use client";
+
+import { Sidebar } from '@/components/layout/Sidebar';
 import { MainLayout } from '@/components/layout/MainLayout';
 
 interface UnionWorkerLayoutProps {
@@ -6,8 +9,8 @@ interface UnionWorkerLayoutProps {
 
 export function UnionWorkerLayout({ children }: UnionWorkerLayoutProps) {
   return (
-    <MainLayout userRole="union_worker">
+    <MainLayout userRole="union_worker" sidebar={<Sidebar userRole="union_worker" />}>
       {children}
     </MainLayout>
   );
-} 
+}

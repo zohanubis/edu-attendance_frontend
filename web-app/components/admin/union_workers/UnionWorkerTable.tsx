@@ -290,7 +290,7 @@ export function UnionWorkerTable() {
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tất cả trạng thái</SelectItem>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
                 <SelectItem value="active">Hoạt động</SelectItem>
                 <SelectItem value="inactive">Ngưng hoạt động</SelectItem>
               </SelectContent>
