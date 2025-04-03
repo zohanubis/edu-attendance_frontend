@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { UnionWorkerSidebar } from "./UnionWorkerSidebar";
 
 const data = [
   {
@@ -39,7 +38,6 @@ export function UnionWorkerDashboard() {
   return (
     <div className="min-h-screen">
       <div className="flex">
-        <UnionWorkerSidebar />
         <main className="flex-1 p-8">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
