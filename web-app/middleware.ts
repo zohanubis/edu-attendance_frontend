@@ -26,6 +26,11 @@ function isPublicPath(path: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // Chuyển hướng từ root path đến /public
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/public', request.url));
+  }
+  
   // Nếu đường dẫn bắt đầu bằng /(public), chuyển hướng đến /public
   if (pathname.includes('/(public)')) {
     const newPathname = pathname.replace('/(public)', '/public');
