@@ -157,8 +157,9 @@ export default function ActivitiesPage() {
 
         return (
           <div
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${registered > 0 ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"
-              }`}
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+              registered > 0 ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"
+            }`}
           >
             {registered} / {capacity}
           </div>
