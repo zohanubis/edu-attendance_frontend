@@ -1,1 +1,0 @@
-// List student (read only )
