@@ -7,8 +7,8 @@ import { buttonVariants } from "@/components/ui/button"
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <footer className={cn(className, "border-t bg-background")}>
-      <div className="container flex flex-col gap-10 py-10 md:flex-row">
+    <footer className={cn(className, "border-t bg-background w-full")}>
+      <div className="flex flex-col gap-10 py-10 md:flex-row px-0">
         <div className="flex flex-col gap-2 md:gap-4 md:w-1/3">
           <Link href="/" className="flex items-center">
             <img
@@ -115,7 +115,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           </div>
         </div>
       </div>
-      <div className="container flex flex-col items-center justify-between gap-4 border-t py-6 md:h-16 md:flex-row md:py-0">
+      <div className="flex flex-col items-center justify-between gap-4 border-t py-6 md:h-16 md:flex-row md:py-0">
         <div className="text-center text-sm text-muted-foreground md:text-left">
           &copy; {new Date().getFullYear()} HUIT Student Portal. All rights reserved.
         </div>

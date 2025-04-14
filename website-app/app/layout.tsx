@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <div className="relative flex min-h-screen flex-col">
+            <div className="relative flex min-h-screen flex-col items-center mx-auto">
               <SiteHeader />
               <main className="flex-1">{children}</main>
               <SiteFooter />

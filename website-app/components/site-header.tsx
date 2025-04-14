@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { UserCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -18,7 +19,9 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { useAuth } from "./auth-provider"
 
+// Base navigation items for all roles
 const mainNavItems = [
   {
     title: "Home",
@@ -34,46 +37,54 @@ const mainNavItems = [
   },
 ]
 
+// Student navigation items
 const studentNavItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-  },
-  {
-    title: "My Activities",
-    href: "/my-activities",
-  },
   {
     title: "Profile",
     href: "/profile",
   },
   {
-    title: "Attendance",
+    title: "My Activities",
+    href: "/my-activities",
+  },
+]
+
+// Youth Union specific navigation
+const youthUnionNavItems = [
+  {
+    title: "Assigned Activities",
     href: "/attendance/assigned",
   },
 ]
 
 export function SiteHeader() {
   const pathname = usePathname()
+  const { user, logout } = useAuth()
   const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const [userRole, setUserRole] = React.useState<"public" | "student" | "youth-union" | "admin">("public")
 
-  // Check if user is authenticated (this is a placeholder, replace with your auth logic)
+  // Check if user is authenticated and get role
   React.useEffect(() => {
-    // Example: Check if user is logged in
-    const checkAuth = () => {
-      // Replace with your actual auth check
-      const token = localStorage.getItem("token")
-      setIsAuthenticated(!!token)
+    if (user) {
+      setIsAuthenticated(true)
+      setUserRole(user.role)
+    } else {
+      setIsAuthenticated(false)
+      setUserRole("public")
     }
-
-    checkAuth()
-  }, [])
+  }, [user])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+      <div className="container mx-auto flex h-16 items-center">
         <MainNav items={mainNavItems} />
-        <MobileNav mainItems={mainNavItems} studentItems={studentNavItems} isAuthenticated={isAuthenticated} />
+        <MobileNav
+          mainItems={mainNavItems}
+          studentItems={studentNavItems}
+          youthUnionItems={youthUnionNavItems}
+          isAuthenticated={isAuthenticated}
+          userRole={userRole}
+        />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
             {isAuthenticated ? (
@@ -81,7 +92,7 @@ export function SiteHeader() {
                 <NavigationMenu className="hidden md:flex">
                   <NavigationMenuList>
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger>Student</NavigationMenuTrigger>
+                      <NavigationMenuTrigger>Account</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                           {studentNavItems.map((item) => (
@@ -92,13 +103,30 @@ export function SiteHeader() {
                               className={cn(pathname === item.href && "text-primary")}
                             />
                           ))}
+                          {userRole === "youth-union" && (
+                            <NavigationMenuItem>
+                              <NavigationMenuTrigger>Attendance</NavigationMenuTrigger>
+                              <NavigationMenuContent>
+                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                  {youthUnionNavItems.map((item) => (
+                                    <ListItem
+                                      key={item.title}
+                                      title={item.title}
+                                      href={item.href}
+                                      className={cn(pathname === item.href && "text-primary")}
+                                    />
+                                  ))}
+                                </ul>
+                              </NavigationMenuContent>
+                            </NavigationMenuItem>
+                          )}
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>
                 <ThemeToggle />
-                <Button asChild variant="ghost" size="sm">
+                <Button asChild variant="ghost" size="sm" onClick={logout}>
                   <Link href="/logout">Logout</Link>
                 </Button>
               </>
@@ -121,19 +149,19 @@ function MainNav({ items }: { items: { title: string; href: string }[] }) {
   const pathname = usePathname()
 
   return (
-    <div className="hidden md:flex">
-      <Link href="/" className="mr-6 flex items-center space-x-2">
+    <div className="flex-1 flex items-center w-full">
+      <Link href="/" className="flex items-center">
         <img
           src="https://huit.edu.vn/Images/Documents/N00CT/logo-huit-web-chinh-moi-mau-xanh-02.svg?h=80"
           alt="HUIT Logo"
           className="h-10 w-auto"
         />
       </Link>
-      <NavigationMenu>
+      <NavigationMenu className="mx-auto">
         <NavigationMenuList>
           {items.map((item) => (
             <NavigationMenuItem key={item.title}>
-              <Link href={item.href} legacyBehavior passHref>
+              <Link href={item.href} passHref>
                 <NavigationMenuLink
                   className={cn(navigationMenuTriggerStyle(), pathname === item.href && "text-primary")}
                 >
@@ -151,11 +179,15 @@ function MainNav({ items }: { items: { title: string; href: string }[] }) {
 function MobileNav({
   mainItems,
   studentItems,
+  youthUnionItems,
   isAuthenticated,
+  userRole,
 }: {
   mainItems: { title: string; href: string }[]
   studentItems: { title: string; href: string }[]
+  youthUnionItems: { title: string; href: string }[]
   isAuthenticated: boolean
+  userRole: "public" | "student" | "youth-union" | "admin"
 }) {
   const pathname = usePathname()
 
@@ -191,12 +223,23 @@ function MobileNav({
 
             {isAuthenticated && (
               <div className="flex flex-col space-y-3 mt-6 border-t pt-6">
-                <h4 className="font-medium text-sm text-muted-foreground mb-1">Student</h4>
-                {studentItems.map((item) => (
+                <h4 className="font-medium text-sm text-muted-foreground mb-1">Account</h4>
+                {studentNavItems.map((item) => (
                   <MobileLink key={item.title} href={item.href} pathname={pathname}>
                     {item.title}
                   </MobileLink>
                 ))}
+
+                {userRole === "youth-union" && (
+                  <>
+                    <h4 className="font-medium text-sm text-muted-foreground mt-4 mb-1">Attendance</h4>
+                    {youthUnionNavItems.map((item) => (
+                      <MobileLink key={item.title} href={item.href} pathname={pathname}>
+                        {item.title}
+                      </MobileLink>
+                    ))}
+                  </>
+                )}
               </div>
             )}
           </div>
